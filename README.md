@@ -26,7 +26,7 @@ As abas são **Clientes**, **Pedidos** e **Relatórios**. Os botões **Separar p
 
 O prazo é informado como `AAAA-MM-DD`. O valor unitário aceita reais com até duas casas decimais, como `12,50`; internamente, é guardado em centavos inteiros. A urgência aceita `alta`, `media` ou `baixa`. Para alterar um registro, deixe em branco os campos que deseja manter. Os filtros só aparecem quando Filtrar pedidos é selecionado; deixe em branco os filtros que não se aplicam. Trocar o tipo de relatório retira o resultado anterior para evitar confusão.
 
-Clientes com pedidos vinculados não podem ser excluídos. Um pedido separado só pode ser alterado ou excluído depois que sua separação for desfeita. O desfazimento segue a pilha: somente a última separação é revertida. A fila prioriza urgência alta, depois média, depois baixa; em cada nível, o prazo mais próximo vem primeiro e o código menor desempata.
+Clientes com pedidos vinculados não podem ser excluídos. Um pedido separado só pode ser alterado ou excluído depois que sua separação for desfeita. O desfazimento segue a pilha: somente a última separação é revertida. O botão **Separar próximo** retira a raiz do heap: urgência alta precede média e baixa; dentro da mesma urgência, o prazo mais próximo vem primeiro e o código menor desempata. A confirmação do botão mostra a urgência e o prazo do pedido escolhido.
 
 ## Estruturas e complexidade
 
@@ -46,7 +46,7 @@ Sejam `c` a quantidade de clientes, `n` a quantidade de pedidos, `p` os pedidos 
 | Desfazer separação | O(log p) amortizado | Desempilha e reinsere o pedido no heap. |
 | Filtrar ou listar pedidos | O(n) | Precisa inspecionar ou copiar os pedidos. |
 | Exibir histórico | O(h) | Percorre a pilha sem removê-la. |
-| Exibir fila em ordem | O(p log p) | A disposição interna de um heap não é uma lista totalmente ordenada. |
+| Exibir fila em ordem | O(p log p) | Copia o vetor do heap e retira sucessivamente a raiz, restaurando a propriedade de heap na cópia; a fila ativa não é modificada. |
 | Relatório por valor | O(n log n) em tempo e O(n) em memória | Merge Sort manual sobre cópia; preserva a ordem do cadastro original. |
 
 A análise de melhor caso para busca binária vale quando o código está no ponto médio logo na primeira comparação. Para operações compostas, o melhor caso depende também de quantos registros participam; por exemplo, uma exclusão de cliente ainda precisa verificar vínculos. O roteiro em [APRESENTACAO.md](APRESENTACAO.md) relaciona os conceitos aos passos da demonstração.
@@ -59,7 +59,7 @@ A análise de melhor caso para busca binária vale quando o código está no pon
 | Lista e busca | Cadastros mantidos por código e consultas por busca binária manual. |
 | Pilha LIFO | **Separar próximo**, **Desfazer** e relatório **Histórico**. |
 | Fila de prioridade | **Separar próximo** e relatório **Fila**. |
-| Ordenação | Relatório **Valor**, implementado com Merge Sort manual. |
+| Ordenação | Relatório **Valor**, implementado com Merge Sort manual. O relatório **Fila** obtém a ordem removendo as raízes de uma cópia do heap. |
 | Relatórios | Aba **Relatórios** com listagem geral, filtros, fila, histórico e valor. |
 | Análise Big O | Tabela acima e roteiro de apresentação. |
 

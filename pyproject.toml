@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "distribuiflow-tde"
+version = "1.0.0"
+description = "ERP didático de pedidos para apresentação de algoritmos e estruturas de dados"
+requires-python = ">=3.10"
+dependencies = ["textual==8.2.8"]
+
+[project.scripts]
+distribuiflow = "distribuiflow.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["distribuiflow*"]
