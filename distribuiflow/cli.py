@@ -246,8 +246,17 @@ class DistribuiFlowApp(App):
             elif identificador in ('separar', 'desfazer'):
                 pedido = self.erp.separar_proximo() if identificador == 'separar' else self.erp.desfazer_ultima_separacao()
                 self.atualizar_cadastros()
-                self.mensagem(f'Pedido {pedido.codigo}: {pedido.status}.' if pedido else
-                              ('Não há pedidos pendentes.' if identificador == 'separar' else 'Histórico vazio.'))
+                if identificador == 'separar' and pedido is not None:
+                    self.mensagem(
+                        f'Pedido {pedido.codigo} separado — urgência {pedido.urgencia}, '
+                        f'prazo {pedido.prazo.isoformat()}. A fila prioriza urgência; '
+                        'dentro dela, o prazo mais próximo; código desempata.'
+                    )
+                elif pedido is not None:
+                    self.mensagem(f'Pedido {pedido.codigo}: {pedido.status}.')
+                else:
+                    self.mensagem('Não há pedidos pendentes.' if identificador == 'separar'
+                                  else 'Histórico vazio.')
             elif identificador == 'exibir':
                 self.exibir_relatorio()
                 self.mensagem('Relatório atualizado; nenhuma estrutura foi consumida.')

@@ -151,5 +151,29 @@ class FilaPrioridade:
         self._descer(pedido.indice_heap)
 
     def listar_prioridade(self):
-        """Retorna pedidos na ordem de atendimento sem modificar o heap."""
-        return merge_sort(self._itens, self._chave)
+        """Retorna pedidos em ordem de atendimento usando uma cópia do heap.
+
+        A cópia é retirada sucessivamente pela raiz. Cada retirada custa
+        O(log p), totalizando O(p log p), sem alterar a fila original.
+        """
+        copia = list(self._itens)
+        resultado = []
+        while copia:
+            resultado.append(copia[0])
+            ultimo = copia.pop()
+            if copia:
+                copia[0] = ultimo
+                indice = 0
+                while True:
+                    esquerda = 2 * indice + 1
+                    direita = esquerda + 1
+                    menor = indice
+                    if esquerda < len(copia) and self._chave(copia[esquerda]) < self._chave(copia[menor]):
+                        menor = esquerda
+                    if direita < len(copia) and self._chave(copia[direita]) < self._chave(copia[menor]):
+                        menor = direita
+                    if menor == indice:
+                        break
+                    copia[indice], copia[menor] = copia[menor], copia[indice]
+                    indice = menor
+        return resultado
